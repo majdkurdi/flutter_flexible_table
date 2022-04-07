@@ -31,6 +31,7 @@ class FlexibleTable extends StatelessWidget {
         TableRow(
           cells: headers,
           isHeader: true,
+          color: color,
           textStyle: headerTS,
           centerContent: centerContent,
         ),
@@ -40,6 +41,7 @@ class FlexibleTable extends StatelessWidget {
               cells: rows[i],
               headers: headers,
               textStyle: cellTS,
+              color: color,
               filled: fillAllRows ? true : i.isEven,
               centerContent: centerContent,
             ),
