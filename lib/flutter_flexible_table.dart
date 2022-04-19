@@ -2,7 +2,7 @@ library flutter_flexible_table;
 
 import 'package:flutter/material.dart';
 
-class FlexibleTable extends StatelessWidget {
+class FlexibleTable<T> extends StatelessWidget {
   const FlexibleTable({
     Key? key,
     required this.headers,
@@ -11,6 +11,7 @@ class FlexibleTable extends StatelessWidget {
     this.headerTS,
     this.divider,
     this.color,
+    this.values,
     this.centerContent = false,
     this.fillAllRows = false,
   }) : super(key: key);
@@ -23,6 +24,7 @@ class FlexibleTable extends StatelessWidget {
   final Color? color;
   final bool fillAllRows;
   final Widget? divider;
+  final List<T>? values;
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +39,14 @@ class FlexibleTable extends StatelessWidget {
         ),
         Expanded(
           child: ListView.separated(
-            itemBuilder: (ctx, i) => TableRow(
+            itemBuilder: (ctx, i) => TableRow<T>(
               cells: rows[i],
               headers: headers,
               textStyle: cellTS,
               color: color,
               filled: fillAllRows ? true : i.isEven,
               centerContent: centerContent,
+              value: values?[i],
             ),
             itemCount: rows.length,
             shrinkWrap: true,
@@ -95,7 +98,7 @@ class Cell extends StatelessWidget {
   }
 }
 
-class TableRow extends StatefulWidget {
+class TableRow<T> extends StatefulWidget {
   TableRow({
     Key? key,
     required this.cells,
@@ -103,6 +106,10 @@ class TableRow extends StatefulWidget {
     this.isHeader = false,
     this.textStyle,
     this.color,
+    this.value,
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onTap,
     this.centerContent = false,
     this.filled = false,
   }) : super(key: key);
@@ -113,6 +120,10 @@ class TableRow extends StatefulWidget {
   final bool filled;
   final bool centerContent;
   final Color? color;
+  final T? value;
+  final void Function(T?)? onTap;
+  final void Function(T?)? onDoubleTap;
+  final void Function(T?)? onLongPress;
 
   @override
   State<TableRow> createState() => _TableRowState();
@@ -125,87 +136,99 @@ class _TableRowState extends State<TableRow> {
     double width = MediaQuery.of(context).size.width;
     final availableSpace = ((width / 100) - 1).round();
 
-    return AnimatedSize(
-      duration: Duration(milliseconds: 300),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 2),
-        color: widget.filled ? (widget.color ?? Colors.grey[200]) : null,
-        child: (widget.cells.length * 100 < width - 40)
-            ? Row(
-                children: widget.cells
-                    .map((e) => Cell(
-                          content: e,
-                          centerContent: widget.centerContent,
-                          textStyle: widget.textStyle,
-                          maxWidth: (width - 80) / widget.cells.length,
-                        ))
-                    .toList(),
-              )
-            : Column(
-                children: [
-                  Row(
-                    children: [
-                      for (int i = 0; i < availableSpace; i++)
-                        Expanded(
-                          child: Cell(
-                            content: widget.cells[i],
+    return InkWell(
+      onTap: () {
+        if (widget.onTap != null) widget.onTap!(widget.value);
+      },
+      onDoubleTap: () {
+        if (widget.onDoubleTap != null) widget.onDoubleTap!(widget.value);
+      },
+      onLongPress: () {
+        if (widget.onLongPress != null) widget.onLongPress!(widget.value);
+      },
+      child: AnimatedSize(
+        duration: Duration(milliseconds: 300),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          color: widget.filled ? (widget.color ?? Colors.grey[200]) : null,
+          child: (widget.cells.length * 100 < width - 40)
+              ? Row(
+                  children: widget.cells
+                      .map((e) => Cell(
+                            content: e,
+                            centerContent: widget.centerContent,
                             textStyle: widget.textStyle,
+                            maxWidth: (width - 80) / widget.cells.length,
+                          ))
+                      .toList(),
+                )
+              : Column(
+                  children: [
+                    Row(
+                      children: [
+                        for (int i = 0; i < availableSpace; i++)
+                          Expanded(
+                            child: Cell(
+                              content: widget.cells[i],
+                              textStyle: widget.textStyle,
+                            ),
                           ),
-                        ),
-                      !widget.isHeader
-                          ? GestureDetector(
-                              onTap: () {
-                                setState(() => expanded = !expanded);
-                              },
-                              child: Container(
-                                  margin: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                          blurRadius: 8,
-                                          color: Colors.grey[400]!,
-                                          spreadRadius: 2)
-                                    ],
-                                  ),
-                                  child: CircleAvatar(
-                                    child: Icon(
-                                      !expanded ? Icons.add : Icons.remove,
-                                      color:
-                                          expanded ? Colors.red : Colors.green,
+                        !widget.isHeader
+                            ? GestureDetector(
+                                onTap: () {
+                                  setState(() => expanded = !expanded);
+                                },
+                                child: Container(
+                                    margin: EdgeInsets.all(10),
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                            blurRadius: 8,
+                                            color: Colors.grey[400]!,
+                                            spreadRadius: 2)
+                                      ],
                                     ),
-                                    backgroundColor: Colors.white,
-                                    radius: 14,
-                                  )))
-                          : SizedBox(width: 48)
-                    ],
-                  ),
-                  if (expanded)
-                    for (int i = availableSpace; i < widget.cells.length; i++)
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          children: [
-                            SizedBox(width: width >= 250 ? 40 : width / 10),
-                            Expanded(
-                              child: Text(
-                                widget.headers![i] + ':       ',
-                                style: widget.textStyle!
-                                    .copyWith(fontWeight: FontWeight.bold),
+                                    child: CircleAvatar(
+                                      child: Icon(
+                                        !expanded ? Icons.add : Icons.remove,
+                                        color: expanded
+                                            ? Colors.red
+                                            : Colors.green,
+                                      ),
+                                      backgroundColor: Colors.white,
+                                      radius: 14,
+                                    )))
+                            : SizedBox(width: 48)
+                      ],
+                    ),
+                    if (expanded)
+                      for (int i = availableSpace; i < widget.cells.length; i++)
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              SizedBox(width: width >= 250 ? 40 : width / 10),
+                              Expanded(
+                                child: Text(
+                                  widget.headers![i] + ':       ',
+                                  style: widget.textStyle!
+                                      .copyWith(fontWeight: FontWeight.bold),
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Text(
-                                widget.cells[i],
-                                style: widget.textStyle,
+                              Expanded(
+                                child: Text(
+                                  widget.cells[i],
+                                  style: widget.textStyle,
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                      )
-                ],
-              ),
+                            ],
+                          ),
+                        )
+                  ],
+                ),
+        ),
       ),
     );
   }
