@@ -8,6 +8,7 @@ class FlexibleTable<T> extends StatelessWidget {
     required this.headers,
     required this.rows,
     this.cellTS,
+    this.colordCellTS,
     this.headerTS,
     this.divider,
     this.color,
@@ -23,6 +24,7 @@ class FlexibleTable<T> extends StatelessWidget {
   final List<List<String>> rows;
   final TextStyle? headerTS;
   final TextStyle? cellTS;
+  final TextStyle? colordCellTS;
   final bool centerContent;
   final Color? color;
   final bool fillAllRows;
@@ -119,6 +121,7 @@ class TableRow<T> extends StatefulWidget {
     this.onDoubleTap,
     this.onLongPress,
     this.onTap,
+    this.coloredCellTextStyle,
     this.centerContent = false,
     this.filled = false,
   }) : super(key: key);
@@ -126,6 +129,7 @@ class TableRow<T> extends StatefulWidget {
   final List<String>? headers;
   final bool isHeader;
   final TextStyle? textStyle;
+  final TextStyle? coloredCellTextStyle;
   final bool filled;
   final bool centerContent;
   final Color? color;
@@ -166,7 +170,10 @@ class _TableRowState<T> extends State<TableRow<T>> {
                       .map((e) => Cell(
                             content: e,
                             centerContent: widget.centerContent,
-                            textStyle: widget.textStyle,
+                            textStyle: widget.filled
+                                ? widget.coloredCellTextStyle ??
+                                    widget.textStyle
+                                : widget.textStyle,
                             maxWidth: (width - 80) / widget.cells.length,
                           ))
                       .toList(),
