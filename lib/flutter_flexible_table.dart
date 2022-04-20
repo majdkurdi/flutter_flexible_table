@@ -12,6 +12,9 @@ class FlexibleTable<T> extends StatelessWidget {
     this.divider,
     this.color,
     this.values,
+    this.onDoubleTap,
+    this.onLongPress,
+    this.onTap,
     this.centerContent = false,
     this.fillAllRows = false,
   }) : super(key: key);
@@ -25,6 +28,9 @@ class FlexibleTable<T> extends StatelessWidget {
   final bool fillAllRows;
   final Widget? divider;
   final List<T>? values;
+  final void Function(T?)? onTap;
+  final void Function(T?)? onLongPress;
+  final void Function(T?)? onDoubleTap;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +53,9 @@ class FlexibleTable<T> extends StatelessWidget {
               filled: fillAllRows ? true : i.isEven,
               centerContent: centerContent,
               value: values?[i],
+              onDoubleTap: onDoubleTap,
+              onTap: onTap,
+              onLongPress: onLongPress,
             ),
             itemCount: rows.length,
             shrinkWrap: true,
