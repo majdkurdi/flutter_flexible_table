@@ -187,7 +187,10 @@ class _TableRowState<T> extends State<TableRow<T>> {
                           Expanded(
                             child: Cell(
                               content: widget.cells[i],
-                              textStyle: widget.textStyle,
+                              textStyle: widget.filled
+                                  ? widget.coloredCellTextStyle ??
+                                      widget.textStyle
+                                  : widget.textStyle,
                             ),
                           ),
                         !widget.isHeader
@@ -230,14 +233,22 @@ class _TableRowState<T> extends State<TableRow<T>> {
                               Expanded(
                                 child: Text(
                                   widget.headers![i] + ':       ',
-                                  style: widget.textStyle!
-                                      .copyWith(fontWeight: FontWeight.bold),
+                                  style: widget.textStyle != null
+                                      ? (widget.filled
+                                              ? widget.coloredCellTextStyle ??
+                                                  widget.textStyle
+                                              : widget.textStyle)!
+                                          .copyWith(fontWeight: FontWeight.bold)
+                                      : widget.textStyle,
                                 ),
                               ),
                               Expanded(
                                 child: Text(
                                   widget.cells[i],
-                                  style: widget.textStyle,
+                                  style: widget.filled
+                                      ? widget.coloredCellTextStyle ??
+                                          widget.textStyle
+                                      : widget.textStyle,
                                 ),
                               ),
                             ],
