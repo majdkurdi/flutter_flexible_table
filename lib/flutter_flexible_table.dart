@@ -8,7 +8,7 @@ class FlexibleTable<T> extends StatelessWidget {
     required this.headers,
     required this.rows,
     this.cellTS,
-    this.colordCellTS,
+    this.coloredCellTS,
     this.headerTS,
     this.divider,
     this.color,
@@ -24,7 +24,7 @@ class FlexibleTable<T> extends StatelessWidget {
   final List<List<String>> rows;
   final TextStyle? headerTS;
   final TextStyle? cellTS;
-  final TextStyle? colordCellTS;
+  final TextStyle? coloredCellTS;
   final bool centerContent;
   final Color? color;
   final bool fillAllRows;
@@ -51,6 +51,7 @@ class FlexibleTable<T> extends StatelessWidget {
               cells: rows[i],
               headers: headers,
               textStyle: cellTS,
+              coloredCellTextStyle: coloredCellTS,
               color: color,
               filled: fillAllRows ? true : i.isEven,
               centerContent: centerContent,
