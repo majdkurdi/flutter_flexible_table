@@ -161,6 +161,7 @@ class _TableRowState<T> extends State<TableRow<T>> {
         if (widget.onLongPress != null) widget.onLongPress!(widget.value);
       },
       child: AnimatedSize(
+        alignment: Alignment.topCenter,
         duration: Duration(milliseconds: 300),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 2),
