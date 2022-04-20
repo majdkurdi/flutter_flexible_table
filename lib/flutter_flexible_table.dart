@@ -135,10 +135,10 @@ class TableRow<T> extends StatefulWidget {
   final void Function(T?)? onLongPress;
 
   @override
-  State<TableRow> createState() => _TableRowState();
+  State<TableRow<T>> createState() => _TableRowState();
 }
 
-class _TableRowState extends State<TableRow> {
+class _TableRowState<T> extends State<TableRow<T>> {
   bool expanded = false;
   @override
   Widget build(BuildContext context) {
