@@ -16,6 +16,7 @@ class FlexibleTable<T> extends StatelessWidget {
     this.onDoubleTap,
     this.onLongPress,
     this.onTap,
+    this.scrollable = true,
     this.centerContent = false,
     this.fillAllRows = false,
   }) : super(key: key);
@@ -30,6 +31,7 @@ class FlexibleTable<T> extends StatelessWidget {
   final bool fillAllRows;
   final Widget? divider;
   final List<T>? values;
+  final bool scrollable;
   final void Function(T?)? onTap;
   final void Function(T?)? onLongPress;
   final void Function(T?)? onDoubleTap;
@@ -45,28 +47,51 @@ class FlexibleTable<T> extends StatelessWidget {
           textStyle: headerTS,
           centerContent: centerContent,
         ),
-        Expanded(
-          child: ListView.separated(
-            itemBuilder: (ctx, i) => TableRow<T>(
-              cells: rows[i],
-              headers: headers,
-              textStyle: cellTS,
-              coloredCellTextStyle: coloredCellTS,
-              color: color,
-              filled: fillAllRows ? true : i.isEven,
-              centerContent: centerContent,
-              value: values?[i],
-              onDoubleTap: onDoubleTap,
-              onTap: onTap,
-              onLongPress: onLongPress,
-            ),
-            itemCount: rows.length,
-            shrinkWrap: true,
-            separatorBuilder: (context, index) =>
-                //  SizedBox()
-                divider ?? const SizedBox(height: 2),
-          ),
-        )
+        scrollable
+            ? Expanded(
+                child: ListView.separated(
+                  itemBuilder: (ctx, i) => TableRow<T>(
+                    cells: rows[i],
+                    headers: headers,
+                    textStyle: cellTS,
+                    coloredCellTextStyle: coloredCellTS,
+                    color: color,
+                    filled: fillAllRows ? true : i.isEven,
+                    centerContent: centerContent,
+                    value: values?[i],
+                    onDoubleTap: onDoubleTap,
+                    onTap: onTap,
+                    onLongPress: onLongPress,
+                  ),
+                  itemCount: rows.length,
+                  shrinkWrap: true,
+                  physics: scrollable ? null : NeverScrollableScrollPhysics(),
+                  separatorBuilder: (context, index) =>
+                      //  SizedBox()
+                      divider ?? const SizedBox(height: 2),
+                ),
+              )
+            : ListView.separated(
+                itemBuilder: (ctx, i) => TableRow<T>(
+                  cells: rows[i],
+                  headers: headers,
+                  textStyle: cellTS,
+                  coloredCellTextStyle: coloredCellTS,
+                  color: color,
+                  filled: fillAllRows ? true : i.isEven,
+                  centerContent: centerContent,
+                  value: values?[i],
+                  onDoubleTap: onDoubleTap,
+                  onTap: onTap,
+                  onLongPress: onLongPress,
+                ),
+                itemCount: rows.length,
+                shrinkWrap: true,
+                physics: scrollable ? null : NeverScrollableScrollPhysics(),
+                separatorBuilder: (context, index) =>
+                    //  SizedBox()
+                    divider ?? const SizedBox(height: 2),
+              ),
       ],
     );
   }
