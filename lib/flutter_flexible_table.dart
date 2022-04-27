@@ -20,7 +20,7 @@ class FlexibleTable<T> extends StatelessWidget {
     this.centerContent = false,
     this.fillAllRows = false,
     this.errorValues = const [],
-    this.errorRowDecoration,
+    this.errorRowDecoration = const ErrorRowDecoration(),
   }) : super(key: key);
 
   final List<String> headers;
@@ -38,7 +38,7 @@ class FlexibleTable<T> extends StatelessWidget {
   final void Function(T?)? onLongPress;
   final void Function(T?)? onDoubleTap;
   final List<T> errorValues;
-  final ErrorRowDecoration? errorRowDecoration;
+  final ErrorRowDecoration errorRowDecoration;
 
   @override
   Widget build(BuildContext context) {
@@ -60,13 +60,13 @@ class FlexibleTable<T> extends StatelessWidget {
                     textStyle: values == null
                         ? cellTS
                         : (errorValues.contains(values![i])
-                            ? errorRowDecoration?.textStyle
+                            ? errorRowDecoration.textStyle
                             : cellTS),
                     coloredCellTextStyle: coloredCellTS,
                     color: values == null
                         ? color
                         : (errorValues.contains(values![i])
-                            ? errorRowDecoration?.rowColor
+                            ? errorRowDecoration.rowColor
                             : color),
                     filled: (values != null && errorValues.contains(values![i]))
                         ? true
@@ -92,13 +92,13 @@ class FlexibleTable<T> extends StatelessWidget {
                   textStyle: values == null
                       ? cellTS
                       : (errorValues.contains(values![i])
-                          ? errorRowDecoration?.textStyle
+                          ? errorRowDecoration.textStyle
                           : cellTS),
                   coloredCellTextStyle: coloredCellTS,
                   color: values == null
                       ? color
                       : (errorValues.contains(values![i])
-                          ? errorRowDecoration?.rowColor
+                          ? errorRowDecoration.rowColor
                           : color),
                   filled: fillAllRows ? true : i.isEven,
                   centerContent: centerContent,
@@ -123,7 +123,7 @@ class ErrorRowDecoration {
   final Color? rowColor;
   final TextStyle? textStyle;
 
-  ErrorRowDecoration({this.rowColor = Colors.red, this.textStyle});
+  const ErrorRowDecoration({this.rowColor = Colors.red, this.textStyle});
 }
 
 class Cell extends StatelessWidget {
