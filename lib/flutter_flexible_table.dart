@@ -57,10 +57,20 @@ class FlexibleTable<T> extends StatelessWidget {
                   itemBuilder: (ctx, i) => TableRow<T>(
                     cells: rows[i],
                     headers: headers,
-                    textStyle: cellTS,
+                    textStyle: values == null
+                        ? cellTS
+                        : (errorValues.contains(values![i])
+                            ? errorRowDecoration?.textStyle
+                            : cellTS),
                     coloredCellTextStyle: coloredCellTS,
-                    color: color,
-                    filled: fillAllRows ? true : i.isEven,
+                    color: values == null
+                        ? color
+                        : (errorValues.contains(values![i])
+                            ? errorRowDecoration?.rowColor
+                            : color),
+                    filled: (values != null && errorValues.contains(values![i]))
+                        ? true
+                        : (fillAllRows ? true : i.isEven),
                     centerContent: centerContent,
                     value: values?[i],
                     onDoubleTap: onDoubleTap,
@@ -88,7 +98,7 @@ class FlexibleTable<T> extends StatelessWidget {
                   color: values == null
                       ? color
                       : (errorValues.contains(values![i])
-                          ? errorRowDecoration?.rowColor ?? Colors.red
+                          ? errorRowDecoration?.rowColor
                           : color),
                   filled: fillAllRows ? true : i.isEven,
                   centerContent: centerContent,
@@ -113,7 +123,7 @@ class ErrorRowDecoration {
   final Color? rowColor;
   final TextStyle? textStyle;
 
-  ErrorRowDecoration({this.rowColor, this.textStyle});
+  ErrorRowDecoration({this.rowColor = Colors.red, this.textStyle});
 }
 
 class Cell extends StatelessWidget {
