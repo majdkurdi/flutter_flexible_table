@@ -21,6 +21,7 @@ class FlexibleTable<T> extends StatelessWidget {
     this.fillAllRows = false,
     this.errorValues = const [],
     this.errorRowDecoration = const ErrorRowDecoration(),
+    this.focusIndex,
   }) : super(key: key);
 
   final List<String> headers;
@@ -39,6 +40,7 @@ class FlexibleTable<T> extends StatelessWidget {
   final void Function(T?)? onDoubleTap;
   final List<T> errorValues;
   final ErrorRowDecoration errorRowDecoration;
+  final int? focusIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -76,6 +78,7 @@ class FlexibleTable<T> extends StatelessWidget {
                     onDoubleTap: onDoubleTap,
                     onTap: onTap,
                     onLongPress: onLongPress,
+                    hasFocus: focusIndex != null ? focusIndex == i : false,
                   ),
                   itemCount: rows.length,
                   shrinkWrap: true,
@@ -179,6 +182,7 @@ class TableRow<T> extends StatefulWidget {
     this.coloredCellTextStyle,
     this.centerContent = false,
     this.filled = false,
+    this.hasFocus = false,
   }) : super(key: key);
   final List<String> cells;
   final List<String>? headers;
@@ -192,6 +196,7 @@ class TableRow<T> extends StatefulWidget {
   final void Function(T?)? onTap;
   final void Function(T?)? onDoubleTap;
   final void Function(T?)? onLongPress;
+  final bool hasFocus;
 
   @override
   State<TableRow<T>> createState() => _TableRowState();
@@ -199,12 +204,29 @@ class TableRow<T> extends StatefulWidget {
 
 class _TableRowState<T> extends State<TableRow<T>> {
   bool expanded = false;
+  final focusNode = FocusNode();
+
+  @override
+  void initState() {
+    if (widget.hasFocus) {
+      FocusScope.of(context).requestFocus(focusNode);
+    }
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     final availableSpace = ((width / 100) - 1).round();
 
     return InkWell(
+      focusNode: focusNode,
       onTap: () {
         if (widget.onTap != null) widget.onTap!(widget.value);
       },
