@@ -208,10 +208,15 @@ class _TableRowState<T> extends State<TableRow<T>> {
 
   @override
   void initState() {
+    super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant TableRow<T> oldWidget) {
     if (widget.hasFocus) {
       FocusScope.of(context).requestFocus(focusNode);
     }
-    super.initState();
+    super.didUpdateWidget(oldWidget);
   }
 
   @override
