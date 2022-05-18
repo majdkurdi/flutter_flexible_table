@@ -281,7 +281,7 @@ class _TableRowState<T> extends State<TableRow<T>> {
                                   setState(() => expanded = !expanded);
                                 },
                                 child: Container(
-                                    margin: EdgeInsets.all(10),
+                                    margin: EdgeInsets.all(20),
                                     decoration: BoxDecoration(
                                       color: Colors.white,
                                       shape: BoxShape.circle,
