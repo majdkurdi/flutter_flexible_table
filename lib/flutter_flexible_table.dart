@@ -280,28 +280,31 @@ class _TableRowState<T> extends State<TableRow<T>> {
                                 onTap: () {
                                   setState(() => expanded = !expanded);
                                 },
-                                child: Container(
-                                    margin: EdgeInsets.all(20),
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                            blurRadius: 8,
-                                            color: Colors.grey[400]!,
-                                            spreadRadius: 2)
-                                      ],
-                                    ),
-                                    child: CircleAvatar(
-                                      child: Icon(
-                                        !expanded ? Icons.add : Icons.remove,
-                                        color: expanded
-                                            ? Colors.red
-                                            : Colors.green,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Container(
+                                      margin: EdgeInsets.all(10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        shape: BoxShape.circle,
+                                        boxShadow: [
+                                          BoxShadow(
+                                              blurRadius: 8,
+                                              color: Colors.grey[400]!,
+                                              spreadRadius: 2)
+                                        ],
                                       ),
-                                      backgroundColor: Colors.white,
-                                      radius: 16,
-                                    )))
+                                      child: CircleAvatar(
+                                        child: Icon(
+                                          !expanded ? Icons.add : Icons.remove,
+                                          color: expanded
+                                              ? Colors.red
+                                              : Colors.green,
+                                        ),
+                                        backgroundColor: Colors.white,
+                                        radius: 16,
+                                      )),
+                                ))
                             : SizedBox(width: 48)
                       ],
                     ),
