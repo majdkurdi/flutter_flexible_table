@@ -281,7 +281,7 @@ class _TableRowState<T> extends State<TableRow<T>> {
                                   setState(() => expanded = !expanded);
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(15.0),
                                   child: Container(
                                       margin: EdgeInsets.all(10),
                                       decoration: BoxDecoration(
