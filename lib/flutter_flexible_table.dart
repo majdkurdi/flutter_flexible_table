@@ -287,7 +287,7 @@ class _TableRowState<T> extends State<TableRow<T>> {
                                       shape: BoxShape.circle,
                                       boxShadow: [
                                         BoxShadow(
-                                            blurRadius: 8,
+                                            blurRadius: 10,
                                             color: Colors.grey[400]!,
                                             spreadRadius: 2)
                                       ],
