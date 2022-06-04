@@ -299,8 +299,8 @@ class _TableRowState<T> extends State<TableRow<T>> {
                                         child: CircleAvatar(
                                           child: Icon(
                                             !expanded
-                                                ? Icons.add
-                                                : Icons.remove,
+                                                ? Icons.expand_more
+                                                : Icons.expand_less,
                                             color: expanded
                                                 ? Colors.red
                                                 : Colors.green,
