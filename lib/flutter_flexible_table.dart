@@ -3,26 +3,27 @@ library flutter_flexible_table;
 import 'package:flutter/material.dart';
 
 class FlexibleTable<T> extends StatelessWidget {
-  const FlexibleTable({
-    Key? key,
-    required this.headers,
-    required this.rows,
-    this.cellTS,
-    this.coloredCellTS,
-    this.headerTS,
-    this.divider,
-    this.color,
-    this.values,
-    this.onDoubleTap,
-    this.onLongPress,
-    this.onTap,
-    this.scrollable = true,
-    this.centerContent = false,
-    this.fillAllRows = false,
-    this.errorValues = const [],
-    this.errorRowDecoration = const ErrorRowDecoration(),
-    this.focusIndex,
-  }) : super(key: key);
+  const FlexibleTable(
+      {Key? key,
+      required this.headers,
+      required this.rows,
+      this.cellTS,
+      this.coloredCellTS,
+      this.headerTS,
+      this.divider,
+      this.color,
+      this.values,
+      this.onDoubleTap,
+      this.onLongPress,
+      this.onTap,
+      this.scrollable = true,
+      this.centerContent = false,
+      this.fillAllRows = false,
+      this.errorValues = const [],
+      this.errorRowDecoration = const ErrorRowDecoration(),
+      this.focusIndex,
+      this.rowHeight})
+      : super(key: key);
 
   final List<String> headers;
   final List<List<String>> rows;
@@ -41,6 +42,7 @@ class FlexibleTable<T> extends StatelessWidget {
   final List<T> errorValues;
   final ErrorRowDecoration errorRowDecoration;
   final int? focusIndex;
+  final double? rowHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -52,6 +54,7 @@ class FlexibleTable<T> extends StatelessWidget {
           color: color,
           textStyle: headerTS,
           centerContent: centerContent,
+          height: rowHeight,
         ),
         scrollable
             ? Expanded(
@@ -59,6 +62,7 @@ class FlexibleTable<T> extends StatelessWidget {
                   itemBuilder: (ctx, i) => TableRow<T>(
                     cells: rows[i],
                     headers: headers,
+                    height: rowHeight,
                     textStyle: values == null
                         ? cellTS
                         : (errorValues.contains(values![i])
@@ -92,6 +96,7 @@ class FlexibleTable<T> extends StatelessWidget {
                 itemBuilder: (ctx, i) => TableRow<T>(
                   cells: rows[i],
                   headers: headers,
+                  height: rowHeight,
                   textStyle: values == null
                       ? cellTS
                       : (errorValues.contains(values![i])
@@ -135,12 +140,14 @@ class Cell extends StatelessWidget {
     required this.content,
     this.textStyle,
     this.maxWidth = 150,
+    this.minHeight,
     this.centerContent = false,
   }) : super(key: key);
 
   final String content;
   final TextStyle? textStyle;
   final double maxWidth;
+  final double? minHeight;
   final bool centerContent;
 
   @override
@@ -149,8 +156,8 @@ class Cell extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Container(
-        constraints:
-            BoxConstraints(minWidth: 50, minHeight: 60, maxWidth: maxWidth),
+        constraints: BoxConstraints(
+            minWidth: 50, minHeight: minHeight ?? 60, maxWidth: maxWidth),
         // width: double.infinity,
         child: Center(
           child: Column(
@@ -183,6 +190,7 @@ class TableRow<T> extends StatefulWidget {
     this.centerContent = false,
     this.filled = false,
     this.hasFocus = false,
+    this.height,
   }) : super(key: key);
   final List<String> cells;
   final List<String>? headers;
@@ -197,6 +205,7 @@ class TableRow<T> extends StatefulWidget {
   final void Function(T?)? onDoubleTap;
   final void Function(T?)? onLongPress;
   final bool hasFocus;
+  final double? height;
 
   @override
   State<TableRow<T>> createState() => _TableRowState();
@@ -252,6 +261,7 @@ class _TableRowState<T> extends State<TableRow<T>> {
                   children: widget.cells
                       .map((e) => Cell(
                             content: e,
+                            minHeight: widget.height,
                             centerContent: widget.centerContent,
                             textStyle: widget.filled
                                 ? widget.coloredCellTextStyle ??
@@ -273,6 +283,7 @@ class _TableRowState<T> extends State<TableRow<T>> {
                                   ? widget.coloredCellTextStyle ??
                                       widget.textStyle
                                   : widget.textStyle,
+                              minHeight: widget.height,
                             ),
                           ),
                         !widget.isHeader
