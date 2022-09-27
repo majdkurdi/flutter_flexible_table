@@ -156,8 +156,8 @@ class Cell extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 4.0),
       child: Container(
-        constraints: BoxConstraints(
-            minWidth: 50, minHeight: minHeight ?? 60, maxWidth: maxWidth),
+        constraints:
+            BoxConstraints(minWidth: 50, minHeight: 20, maxWidth: maxWidth),
         // width: double.infinity,
         child: Center(
           child: Column(
